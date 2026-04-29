@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק השלום העולמי</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #e0d5b7; min-height: 100vh; display: flex; align-items: center; justify-content: center; direction: rtl; }
+        .hub { text-align: center; padding: 40px; }
+        h1 { color: #FFD700; font-size: 36px; margin-bottom: 10px; }
+        .subtitle { color: #b8b894; margin-bottom: 40px; }
+        .groups { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .group-card { background: rgba(40,40,60,0.8); border: 2px solid #DAA520; border-radius: 12px; padding: 30px 40px; text-decoration: none; color: #e0d5b7; transition: all 0.3s ease; min-width: 200px; }
+        .group-card:hover { background: rgba(60,60,80,0.9); box-shadow: 0 0 20px rgba(218,165,32,0.4); transform: translateY(-3px); }
+        .group-name { font-size: 22px; color: #FFD700; margin-bottom: 8px; }
+        .group-season { font-size: 14px; color: #b8b894; }
+        .admin { margin-top: 40px; }
+        .admin a { color: #b8b894; font-size: 13px; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="hub">
+        <h1>🌍 משחק השלום העולמי</h1>
+        <p class="subtitle">בחרו את הקבוצה שלכם</p>
+        <div class="groups">
+            <a href="dashboard_group1.html" class="group-card">
+                <div class="group-name">🏰 קבוצה 1</div>
+                <div class="group-season">עונה 4 — אביב</div>
+            </a>
+            <a href="dashboard_group2.html" class="group-card">
+                <div class="group-name">🏛️ קבוצה 2</div>
+                <div class="group-season">עונה 2 — סתיו</div>
+            </a>
+            <a href="dashboard_group3.html" class="group-card">
+                <div class="group-name">⚡ קבוצה 3</div>
+                <div class="group-season">עונה 2 — סתיו</div>
+            </a>
+        </div>
+        <div class="admin">
+            <a href="serve_game.html">🔧 דף QR למנחה</a>
+        </div>
+    </div>
+</body>
+</html>
