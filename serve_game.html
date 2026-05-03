@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Peace Game — QR Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #e0d5b7; min-height: 100vh; direction: rtl; padding: 20px; }
+        h1 { text-align: center; color: #FFD700; font-size: 28px; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #b8b894; margin-bottom: 5px; font-size: 14px; }
+        .setup { background: rgba(40,40,60,0.8); border: 2px solid #DAA520; border-radius: 10px; padding: 20px; max-width: 600px; margin: 15px auto; }
+        .setup label { display: block; color: #FFD700; margin-bottom: 5px; font-weight: bold; }
+        .setup input { width: 100%; padding: 12px; font-size: 18px; background: rgba(30,30,50,0.8); border: 2px solid #DAA520; color: #e0d5b7; border-radius: 8px; text-align: center; direction: ltr; }
+        .setup button { display: block; width: 100%; margin-top: 15px; padding: 14px; font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #4a3f9f, #6a5acd); color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .setup button:hover { background: linear-gradient(135deg, #5a4faf, #7a6add); }
+        .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 20px auto; }
+        .group-card { background: rgba(40,40,60,0.8); border: 2px solid #DAA520; border-radius: 10px; padding: 20px; text-align: center; }
+        .group-title { color: #FFD700; font-size: 22px; margin-bottom: 10px; }
+        .group-season { color: #b8b894; font-size: 14px; margin-bottom: 15px; }
+        .qr-container { background: white; display: inline-block; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        .qr-container img { display: block; }
+        .group-url { font-size: 11px; color: #8B8B6B; word-break: break-all; direction: ltr; margin-top: 10px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 5px; }
+        .passwords { margin-top: 15px; text-align: right; }
+        .passwords summary { color: #FFD700; cursor: pointer; font-size: 14px; }
+        .pass-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 15px; font-size: 13px; margin-top: 8px; }
+        .pass-role { color: #b8b894; }
+        .pass-code { color: #4ade80; direction: ltr; text-align: left; font-family: monospace; }
+        .instructions { max-width: 600px; margin: 20px auto; background: rgba(40,40,60,0.5); border: 1px solid #8B4513; border-radius: 8px; padding: 15px; font-size: 14px; line-height: 1.8; }
+        .instructions h3 { color: #FFD700; margin-bottom: 10px; }
+        .instructions code { background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 3px; direction: ltr; display: inline-block; color: #4ade80; }
+        .hidden { display: none; }
+        .print-btn { display: block; max-width: 600px; margin: 15px auto; padding: 10px; font-size: 14px; background: rgba(139,69,19,0.5); border: 1px solid #DAA520; color: #e0d5b7; border-radius: 5px; cursor: pointer; }
+        @media print {
+            body { background: white; color: black; }
+            .setup, .instructions, .print-btn, .subtitle { display: none; }
+            .group-card { border-color: #333; break-inside: avoid; }
+            .group-title { color: #333; }
+            .group-season { color: #666; }
+            .group-url { color: #333; background: #eee; }
+            .pass-role { color: #666; }
+            .pass-code { color: #333; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 משחק השלום העולמי — QR Hub</h1>
+    <p class="subtitle">דף זה ליצירת קודי QR לטאבלטים</p>
+
+    <div class="setup" id="setupPanel">
+        <div style="margin-bottom: 15px;">
+            <button onclick="generateQRs('netlify')" style="display:block;width:100%;margin-bottom:10px;padding:14px;font-size:18px;font-weight:bold;background:linear-gradient(135deg,#059669,#10b981);color:white;border:none;border-radius:8px;cursor:pointer;">🌐 ייצר QR — אתר Netlify (מומלץ)</button>
+            <p style="font-size: 12px; color: #4ade80; text-align: center;">peacegamedashboard.netlify.app — עובד מכל מקום עם אינטרנט</p>
+        </div>
+        <div style="border-top: 1px solid #555; padding-top: 15px;">
+            <label>או: כתובת IP לרשת מקומית:</label>
+            <input type="text" id="ipInput" placeholder="192.168.1.XX" />
+            <p style="font-size: 12px; color: #b8b894; margin-top: 8px; text-align: center;">
+                לא יודע? פתח טרמינל והקלד: <code style="background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:3px;color:#4ade80;direction:ltr;display:inline-block">ipconfig</code> (Windows) או <code style="background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:3px;color:#4ade80;direction:ltr;display:inline-block">ifconfig</code> (Mac)
+            </p>
+            <button onclick="generateQRs('local')">ייצר QR — רשת מקומית</button>
+        </div>
+    </div>
+
+    <div class="groups hidden" id="groupsPanel"></div>
+    <button class="print-btn hidden" id="printBtn" onclick="window.print()">🖨️ הדפס דף QR לחלוקה</button>
+
+    <div class="instructions">
+        <h3>📋 הוראות הפעלה</h3>
+        <p>1. פתח טרמינל / שורת פקודה במחשב שלך</p>
+        <p>2. נווט לתיקיית המשחק: <code>cd "הנתיב לתיקייה"</code></p>
+        <p>3. הפעל שרת: <code>python3 -m http.server 8080</code> או <code>python -m http.server 8080</code></p>
+        <p>4. הכנס את כתובת ה-IP שלך למעלה וייצר QR</p>
+        <p>5. התלמידים סורקים את ה-QR מהטאבלט ומקלידים סיסמה</p>
+        <p style="margin-top: 10px; color: #fbbf24;">⚠️ המחשב והטאבלטים חייבים להיות על אותו WiFi</p>
+    </div>
+
+    <script>
+        var GROUPS = [
+            {
+                name: 'קבוצה 1',
+                file: 'dashboard_group1.html',
+                season: 'עונה 3 — חורף',
+                passwords: {
+                    'מלוחה': 'melah7shalom',
+                    'מתוקה': 'shokoWonka9',
+                    'חמצוציה': 'hamutz3lemon',
+                    'מרית': 'kerah5storm',
+                    'אומ"י': 'shalom4olam',
+                    'מלכה': 'keter8zahav',
+                    'סוחר נשק': 'barzel6boom',
+                    'פיראטים': 'yam2skulls',
+                    'צופה': 'ayin1roeh'
+                }
+            },
+            {
+                name: 'קבוצה 2',
+                file: 'dashboard_group2.html',
+                season: 'עונה 2 — סתיו',
+                passwords: {
+                    'מלוחה': 'salt4shem',
+                    'מתוקה': 'dvash7ziv',
+                    'חמצוציה': 'limon8paz',
+                    'מרית': 'sheleg7ziv',
+                    'אומ"י': 'olam5paz',
+                    'מלכה': 'malka9paz',
+                    'סוחר נשק': 'plada5har',
+                    'פיראטים': 'ohel7paz',
+                    'צופה': 'roeh7netz'
+                }
+            },
+            {
+                name: 'קבוצה 3',
+                file: 'dashboard_group3.html',
+                season: 'עונה 2 — סתיו',
+                passwords: {
+                    'מלוחה': 'maluah6shem',
+                    'מתוקה': 'matok3kal',
+                    'חמצוציה': 'etz4ziv',
+                    'מרית': 'kar5esh',
+                    'אומ"י': 'degel2paz',
+                    'מלכה': 'zahav4kal',
+                    'סוחר נשק': 'boom6netz',
+                    'פיראטים': 'dag7kal',
+                    'צופה': 'tzofeh2shem'
+                }
+            }
+        ];
+
+        function generateQRs(mode) {
+            var base;
+            if (mode === 'netlify') {
+                base = 'https://peacegamedashboard.netlify.app/';
+            } else {
+                var ip = document.getElementById('ipInput').value.trim();
+                if (!ip) { alert('הכנס כתובת IP'); return; }
+                base = 'http://' + ip + ':8080/';
+            }
+
+            var container = document.getElementById('groupsPanel');
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+            document.getElementById('printBtn').classList.remove('hidden');
+
+            GROUPS.forEach(function(group) {
+                var url = base + encodeURIComponent(group.file);
+                var card = document.createElement('div');
+                card.className = 'group-card';
+
+                // Generate QR
+                var qr = qrcode(0, 'M');
+                qr.addData(url);
+                qr.make();
+
+                var passHtml = '';
+                Object.entries(group.passwords).forEach(function(entry) {
+                    passHtml += '<span class="pass-role">' + entry[0] + ':</span><span class="pass-code">' + entry[1] + '</span>';
+                });
+
+                card.innerHTML = '<div class="group-title">🌍 ' + group.name + '</div>' +
+                    '<div class="group-season">' + group.season + '</div>' +
+                    '<div class="qr-container">' + qr.createImgTag(5, 0) + '</div>' +
+                    '<div class="group-url">' + url + '</div>' +
+                    '<details class="passwords"><summary>🔑 סיסמאות</summary><div class="pass-grid">' + passHtml + '</div></details>';
+
+                container.appendChild(card);
+            });
+
+            document.getElementById('setupPanel').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
